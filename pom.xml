@@ -62,8 +62,8 @@
 
         <!-- OpenAPI Java Client -->
         <dependency>
-            <groupId>org.openapitools</groupId>
-            <artifactId>openapi-java-client</artifactId>
+            <groupId>tc.oc.occ</groupId>
+            <artifactId>cobweb-java-client</artifactId>
             <version>v2</version>
             <scope>compile</scope>
         </dependency>
@@ -104,7 +104,7 @@
                     <minimizeJar>true</minimizeJar>
                     <artifactSet>
                         <includes>
-                            <include>tc.oc.occ:Dispense</include>
+                            <include>*:*</include>
                         </includes>
                     </artifactSet>
                     <filters>
@@ -125,7 +125,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <!-- Allows git commit id to be used in plugin.yml -->
             <plugin>
                 <groupId>pl.project13.maven</groupId>
