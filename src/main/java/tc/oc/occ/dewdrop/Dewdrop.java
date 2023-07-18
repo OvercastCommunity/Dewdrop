@@ -2,17 +2,16 @@ package tc.oc.occ.dewdrop;
 
 import co.aikar.commands.BukkitCommandManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import tc.oc.occ.dewdrop.cobweb.CobwebAPI;
+import tc.oc.occ.dewdrop.api.APIManager;
 import tc.oc.occ.dewdrop.commands.TestCommand;
-import tc.oc.occ.dewdrop.matches.DewdropMatchManager;
+import tc.oc.occ.dewdrop.matches.MatchManager;
 
 public class Dewdrop extends JavaPlugin {
 
   private static Dewdrop PLUGIN;
 
-  private CobwebAPI cobweb;
-  private DewdropConfig config;
-  private DewdropMatchManager matchManager;
+  private APIManager apiManager;
+  private MatchManager matchManager;
   private BukkitCommandManager commands;
 
   @Override
@@ -22,12 +21,11 @@ public class Dewdrop extends JavaPlugin {
     this.saveDefaultConfig();
     this.reloadConfig();
 
-    this.config = new DewdropConfig(getConfig());
-    this.cobweb = new CobwebAPI(config, getLogger());
-    this.matchManager = new DewdropMatchManager(this, cobweb);
+    this.apiManager = new APIManager(getLogger());
+    this.matchManager = new MatchManager(this, apiManager);
 
     this.commands = new BukkitCommandManager(this);
-    commands.registerDependency(DewdropMatchManager.class, matchManager);
+    commands.registerDependency(APIManager.class, apiManager);
     commands.registerCommand(new TestCommand());
   }
 
