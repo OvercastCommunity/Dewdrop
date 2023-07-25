@@ -36,9 +36,10 @@ public class PlayerManager extends DewdropManager implements Listener {
     user.setUsername(ple.getName());
 
     // query api and save to cache
-    UserDTO response = apiManager.upsertUser(user);
-    if (response == null) return;
-
-    userCache.put(user.getUserUuid(), response);
+    Dewdrop.newChain()
+        .asyncFirst(() -> apiManager.upsertUser(user))
+        .abortIfNull()
+        .syncLast(response -> userCache.put(user.getUserUuid(), response))
+        .execute();
   }
 }

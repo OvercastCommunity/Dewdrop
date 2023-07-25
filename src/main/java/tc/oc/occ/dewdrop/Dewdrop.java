@@ -1,6 +1,9 @@
 package tc.oc.occ.dewdrop;
 
 import co.aikar.commands.BukkitCommandManager;
+import co.aikar.taskchain.BukkitTaskChainFactory;
+import co.aikar.taskchain.TaskChain;
+import co.aikar.taskchain.TaskChainFactory;
 import org.bukkit.plugin.java.JavaPlugin;
 import tc.oc.occ.dewdrop.api.APIManager;
 import tc.oc.occ.dewdrop.commands.TestCommand;
@@ -11,6 +14,7 @@ import tc.oc.occ.dewdrop.managers.PlayerManager;
 public class Dewdrop extends JavaPlugin {
 
   private static Dewdrop PLUGIN;
+  private static TaskChainFactory taskChainFactory;
 
   private APIManager apiManager;
 
@@ -36,6 +40,8 @@ public class Dewdrop extends JavaPlugin {
     this.commands = new BukkitCommandManager(this);
     commands.registerDependency(APIManager.class, apiManager);
     commands.registerCommand(new TestCommand());
+
+    taskChainFactory = BukkitTaskChainFactory.create(this);
   }
 
   @Override
@@ -43,5 +49,13 @@ public class Dewdrop extends JavaPlugin {
 
   public static Dewdrop get() {
     return PLUGIN;
+  }
+
+  public static <T> TaskChain<T> newChain() {
+    return taskChainFactory.newChain();
+  }
+
+  public static <T> TaskChain<T> newSharedChain(String name) {
+    return taskChainFactory.newSharedChain(name);
   }
 }

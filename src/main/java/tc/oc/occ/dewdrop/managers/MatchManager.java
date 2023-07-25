@@ -7,7 +7,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import tc.oc.occ.cobweb.definitions.CreateMatchDTO;
-import tc.oc.occ.cobweb.definitions.MatchDTO;
 import tc.oc.occ.dewdrop.Dewdrop;
 import tc.oc.occ.dewdrop.DewdropManager;
 import tc.oc.occ.dewdrop.api.APIManager;
@@ -29,20 +28,19 @@ public class MatchManager extends DewdropManager implements Listener {
     CreateMatchDTO request = MatchData.populateNewMatch(event.getMatch());
     if (request == null) return;
 
-    MatchDTO response = apiManager.createMatch(request);
-    if (response == null || AppData.Web.getMatch() == null) return;
-
-    Bukkit.getScheduler()
-        .scheduleAsyncDelayedTask(
-            this.plugin,
-            () -> {
+    Dewdrop.newSharedChain("match")
+        .asyncFirst(() -> apiManager.createMatch(request))
+        .abortIf(response -> response == null || AppData.Web.getMatch() == null)
+        .delay(130)
+        .asyncLast(
+            response -> {
               Bukkit.getServer()
                   .getPluginManager()
                   .callEvent(new MatchStatsEvent(event.getMatch(), true, true));
 
               event.getMatch().sendMessage(Messages.matchLink(response));
               event.getMatch().sendMessage(empty());
-            },
-            130L);
+            })
+        .execute();
   }
 }

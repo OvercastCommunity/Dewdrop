@@ -18,6 +18,6 @@ public class MapManager extends DewdropManager implements Listener {
   @EventHandler
   public void onMatchLoad(MatchLoadEvent event) {
     UpsertPGMMapDTO map = MapData.populateMap(event.getMatch().getMap());
-    apiManager.upsertMap(map);
+    Dewdrop.newSharedChain("map").async(() -> apiManager.upsertMap(map)).execute();
   }
 }

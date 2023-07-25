@@ -1,6 +1,5 @@
 package tc.oc.occ.dewdrop.utils;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,8 +27,8 @@ public class MapData {
 
     map.setName(pgmMap.getName());
     map.setSlug(pgmMap.getId());
-    map.setTeamCount(BigDecimal.valueOf(pgmMap.getMaxPlayers().size()));
-    map.setPlayerCount(BigDecimal.valueOf(pgmMap.getMaxPlayers().stream().reduce(0, Integer::sum)));
+    map.setTeamCount(pgmMap.getMaxPlayers().size());
+    map.setPlayerCount(pgmMap.getMaxPlayers().stream().reduce(0, Integer::sum));
     map.setUniform(
         new HashSet<Integer>(new ArrayList<Integer>(pgmMap.getMaxPlayers())).size() <= 1);
 

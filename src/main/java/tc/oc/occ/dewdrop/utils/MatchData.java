@@ -1,12 +1,11 @@
 package tc.oc.occ.dewdrop.utils;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 import tc.oc.occ.cobweb.definitions.CreateMatchDTO;
 import tc.oc.occ.cobweb.definitions.CreateParticipationDTO;
 import tc.oc.occ.cobweb.definitions.CreateStatsDTO;
@@ -23,7 +22,7 @@ import tc.oc.pgm.stats.StatsMatchModule;
 import tc.oc.pgm.teams.Team;
 
 public class MatchData {
-  public static @Nullable CreateMatchDTO populateNewMatch(Match pgmMatch) {
+  public static CreateMatchDTO populateNewMatch(Match pgmMatch) {
     ScoreMatchModule scoreModule = pgmMatch.getModule(ScoreMatchModule.class);
     StatsMatchModule statsModule = pgmMatch.getModule(StatsMatchModule.class);
 
@@ -42,7 +41,7 @@ public class MatchData {
     if (pgmMatch.hasModule(FreeForAllMatchModule.class)) {
       match.setParticipations(
           statsModule.getStats().entrySet().stream()
-              .map(MatchData::populateNewParticipation)
+              .map(pair -> populateNewParticipation(pair, scoreModule))
               .collect(Collectors.toList()));
 
       if (winner.isPresent()) {
@@ -58,15 +57,12 @@ public class MatchData {
 
                     team.setName(competitor.getNameLegacy());
                     team.setColor("#" + Integer.toHexString(competitor.getFullColor().asRGB()));
-                    team.setScore(
-                        scoreModule != null
-                            ? BigDecimal.valueOf(scoreModule.getScore(competitor))
-                            : null);
+                    team.setScore(scoreModule != null ? (int) scoreModule.getScore(competitor) : 0);
 
                     team.setParticipations(
                         statsModule.getParticipationStats().row((Team) competitor).entrySet()
                             .stream()
-                            .map(MatchData::populateNewParticipation)
+                            .map(pair -> populateNewParticipation(pair, scoreModule))
                             .collect(Collectors.toList()));
 
                     return team;
@@ -78,21 +74,20 @@ public class MatchData {
 
         winnerTeam.setName(winner.get().getNameLegacy());
         winnerTeam.setColor("#" + Integer.toHexString(winner.get().getFullColor().asRGB()));
-        winnerTeam.setScore(
-            scoreModule != null ? BigDecimal.valueOf(scoreModule.getScore(winner.get())) : null);
+        winnerTeam.setScore(scoreModule != null ? (int) scoreModule.getScore(winner.get()) : null);
 
         match.setWinnerTeam(winnerTeam);
       }
     }
 
     match.setMapSlug(pgmMatch.getMap().getId());
-    match.setSeriesId(BigDecimal.valueOf(AppData.getSeriesId()));
+    match.setSeriesId(AppData.getSeriesId());
 
     return match;
   }
 
   private static CreateParticipationDTO populateNewParticipation(
-      Map.Entry<UUID, PlayerStats> pair) {
+      Map.Entry<UUID, PlayerStats> pair, ScoreMatchModule scoreModule) {
     UUID userUuid = pair.getKey();
     PlayerStats playerStats = pair.getValue();
 
@@ -103,23 +98,24 @@ public class MatchData {
     if (playerStats == null) return participation;
 
     CreateStatsDTO stats = new CreateStatsDTO();
-    stats.setKills(BigDecimal.valueOf(playerStats.getKills()));
-    stats.setDeaths(BigDecimal.valueOf(playerStats.getDeaths()));
-    stats.setKillstreak(BigDecimal.valueOf(playerStats.getMaxKillstreak()));
-    stats.setDamageDealt(BigDecimal.valueOf(playerStats.getDamageDone()));
-    stats.setDamageDealtBow(BigDecimal.valueOf(playerStats.getBowDamage()));
-    stats.setDamageReceived(BigDecimal.valueOf(playerStats.getDamageTaken()));
-    stats.setDamageReceivedBow(BigDecimal.valueOf(playerStats.getBowDamageTaken()));
-    stats.setArrowsHit(BigDecimal.valueOf(playerStats.getShotsHit()));
-    stats.setArrowsShot(BigDecimal.valueOf(playerStats.getShotsTaken()));
+    stats.setKills(playerStats.getKills());
+    stats.setDeaths(playerStats.getDeaths());
+    stats.setKillstreak(playerStats.getMaxKillstreak());
+    stats.setDamageDealt((int) playerStats.getDamageDone());
+    stats.setDamageDealtBow((int) playerStats.getBowDamage());
+    stats.setDamageReceived((int) playerStats.getDamageTaken());
+    stats.setDamageReceivedBow((int) playerStats.getBowDamageTaken());
+    stats.setArrowsHit(playerStats.getShotsHit());
+    stats.setArrowsShot(playerStats.getShotsTaken());
 
-    stats.setWools(BigDecimal.valueOf(playerStats.getWoolsCaptured()));
-    stats.setMonuments(BigDecimal.valueOf(playerStats.getMonumentsDestroyed()));
-    stats.setCores(BigDecimal.valueOf(playerStats.getCoresLeaked()));
-    stats.setFlags(BigDecimal.valueOf(playerStats.getFlagsCaptured()));
-    stats.setHills(BigDecimal.valueOf(0)); // Revisit this later
+    stats.setWools(playerStats.getWoolsCaptured());
+    stats.setWoolsTouched(playerStats.getWoolsTouched());
+    stats.setMonuments(playerStats.getMonumentsDestroyed());
+    stats.setCores(playerStats.getCoresLeaked());
+    stats.setFlags(playerStats.getFlagsCaptured());
+    stats.setFlagsPicked(playerStats.getFlagPickups());
 
-    stats.setScore(BigDecimal.valueOf(0)); // Revisit this later
+    stats.setScore(scoreModule != null ? (int) scoreModule.getContribution(userUuid) : 0);
 
     participation.setStats(stats);
 
