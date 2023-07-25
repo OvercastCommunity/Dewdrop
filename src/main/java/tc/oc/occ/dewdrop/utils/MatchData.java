@@ -77,8 +77,7 @@ public class MatchData {
         CreateWinnerTeamDTO winnerTeam = new CreateWinnerTeamDTO();
 
         winnerTeam.setName(winner.get().getNameLegacy());
-        winnerTeam.setColor(
-            "#" + Integer.toHexString(winner.get().getFullColor().asRGB()).substring(2));
+        winnerTeam.setColor("#" + Integer.toHexString(winner.get().getFullColor().asRGB()));
         winnerTeam.setScore(
             scoreModule != null ? BigDecimal.valueOf(scoreModule.getScore(winner.get())) : null);
 
