@@ -32,6 +32,10 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>aikar</id>
             <url>https://repo.aikar.co/content/groups/aikar/</url>
         </repository>
@@ -63,9 +67,10 @@
 
         <!-- PGM -->
         <dependency>
-            <groupId>tc.oc.pgm</groupId>
-            <artifactId>core</artifactId>
-            <version>0.16-SNAPSHOT</version>
+            <groupId>com.github.Pugzy</groupId>
+            <artifactId>PGM</artifactId>
+            <version>team-stats-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

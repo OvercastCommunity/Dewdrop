@@ -4,21 +4,33 @@ import java.util.logging.Logger;
 import tc.oc.occ.cobweb.ApiClient;
 import tc.oc.occ.cobweb.ApiException;
 import tc.oc.occ.cobweb.Configuration;
+import tc.oc.occ.cobweb.api.MapsApi;
 import tc.oc.occ.cobweb.api.MatchesApi;
+import tc.oc.occ.cobweb.api.UsersApi;
+import tc.oc.occ.cobweb.definitions.BasicUserDTO;
 import tc.oc.occ.cobweb.definitions.CreateMatchDTO;
 import tc.oc.occ.cobweb.definitions.MatchDTO;
+import tc.oc.occ.cobweb.definitions.PGMMapDTO;
+import tc.oc.occ.cobweb.definitions.UpsertPGMMapDTO;
+import tc.oc.occ.cobweb.definitions.UserDTO;
 import tc.oc.occ.dewdrop.config.AppData;
 
 public class APIManager {
 
   private ApiClient client;
-  private final MatchesApi matchesApi;
   private final Logger logger;
+
+  private final MatchesApi matchesApi;
+  private final MapsApi mapsApi;
+  private final UsersApi usersApi;
 
   public APIManager(Logger logger) {
     this.logger = logger;
     loadClient(AppData.API.getURL(), AppData.API.getKey());
+
     this.matchesApi = new MatchesApi(client);
+    this.mapsApi = new MapsApi(client);
+    this.usersApi = new UsersApi(client);
   }
 
   private void loadClient(String apiURL, String apiKey) {
@@ -65,5 +77,21 @@ public class APIManager {
       }
     }
     return null;
+  }
+
+  public PGMMapDTO upsertMap(UpsertPGMMapDTO map) {
+    try {
+      return mapsApi.mapsControllerUpsertMap(map.getSlug(), map);
+    } catch (ApiException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public UserDTO upsertUser(BasicUserDTO user) {
+    try {
+      return usersApi.usersControllerUpsertUser(user.getUserUuid().toString(), user);
+    } catch (ApiException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

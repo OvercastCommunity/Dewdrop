@@ -6,11 +6,8 @@ api:
 # Name of the server (empty to use system env var)
 server-name: ""
 
-# Series settings
-series:
-  series-id: 1
-  name: "Casual"
-  service: "CASUAL"
+# Series id assigned to matches
+series-id: 1
 
 # Spider website page links (remove section to remove references)
 web:

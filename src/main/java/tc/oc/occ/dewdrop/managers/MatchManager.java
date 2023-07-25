@@ -1,4 +1,4 @@
-package tc.oc.occ.dewdrop.matches;
+package tc.oc.occ.dewdrop.managers;
 
 import static net.kyori.adventure.text.Component.empty;
 

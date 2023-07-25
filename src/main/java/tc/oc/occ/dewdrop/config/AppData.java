@@ -14,19 +14,8 @@ public class AppData {
     }
   }
 
-  public static class Series {
-
-    public static int getSeriesId() {
-      return Dewdrop.get().getConfig().getInt("series.series-id");
-    }
-
-    public static String getName() {
-      return Dewdrop.get().getConfig().getString("series.name");
-    }
-
-    public static String getService() {
-      return Dewdrop.get().getConfig().getString("series.service");
-    }
+  public static int getSeriesId() {
+    return Dewdrop.get().getConfig().getInt("series-id");
   }
 
   public static class Web {
