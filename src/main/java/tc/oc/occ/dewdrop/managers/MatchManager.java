@@ -28,11 +28,11 @@ public class MatchManager extends DewdropManager implements Listener {
     CreateMatchDTO request = MatchData.populateNewMatch(event.getMatch());
     if (request == null) return;
 
-    Dewdrop.newSharedChain("match")
+    Dewdrop.newSharedChain("main")
         .asyncFirst(() -> apiManager.createMatch(request))
         .abortIf(response -> response == null || AppData.Web.getMatch() == null)
         .delay(130)
-        .asyncLast(
+        .syncLast(
             response -> {
               Bukkit.getServer()
                   .getPluginManager()
