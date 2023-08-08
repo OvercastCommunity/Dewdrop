@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
 import tc.oc.occ.cobweb.definitions.CreateMatchDTO;
 import tc.oc.occ.cobweb.definitions.CreateParticipationDTO;
 import tc.oc.occ.cobweb.definitions.CreateStatsDTO;

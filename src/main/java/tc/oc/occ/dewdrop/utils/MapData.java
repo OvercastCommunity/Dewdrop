@@ -3,24 +3,58 @@ package tc.oc.occ.dewdrop.utils;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import tc.oc.occ.cobweb.definitions.UpsertPGMMapDTO;
 import tc.oc.pgm.api.map.Gamemode;
 import tc.oc.pgm.api.map.MapInfo;
-import tc.oc.pgm.api.map.MapTag;
 
 public class MapData {
   private static List<String> conquestGamemodes =
-      Stream.of(
-              Gamemode.CAPTURE_THE_FLAG,
-              Gamemode.KING_OF_THE_FLAG,
-              Gamemode.KING_OF_THE_HILL,
-              Gamemode.CONTROL_THE_POINT,
-              Gamemode.DEATHMATCH)
-          .map(Gamemode::getAcronym)
-          .collect(Collectors.toList());
+      Stream.of("CTF", "KOTF", "KOTH", "CP", "TDM").collect(Collectors.toList());
+
+  /** Translates PGM gamemodes into Cobweb map tags */
+  public static Set<String> getMapTagsFromMap(MapInfo map) {
+    Set<String> mapTags = new HashSet<String>();
+
+    for (Gamemode gamemode : map.getGamemodes()) {
+      switch (gamemode.getId()) {
+        case "arcade":
+          mapTags.add("FUN");
+          break;
+        case "bedwars":
+          mapTags.add("BW");
+          break;
+        case "br":
+          mapTags.add("BLITZ");
+          mapTags.add("RAGE");
+          break;
+        case "ffb":
+          mapTags.add("FF");
+          break;
+        case "blitz":
+        case "bridge":
+        case "cp":
+        case "ctf":
+        case "ctw":
+        case "dtc":
+        case "dtm":
+        case "koth":
+        case "kotf":
+        case "rage":
+        case "tdm":
+          mapTags.add(gamemode.getId().toUpperCase());
+          break;
+
+          // A/D, FFA, Infection, Mixed, Payload, Race for Wool, Scorebox, Skywars and SG are
+          // missing as Cobweb map tags
+      }
+    }
+
+    if (mapTags.stream().anyMatch(MapData.conquestGamemodes::contains)) mapTags.add("CONQ");
+    return mapTags;
+  }
 
   public static UpsertPGMMapDTO populateMap(MapInfo pgmMap) {
     UpsertPGMMapDTO map = new UpsertPGMMapDTO();
@@ -32,15 +66,7 @@ public class MapData {
     map.setUniform(
         new HashSet<Integer>(new ArrayList<Integer>(pgmMap.getMaxPlayers())).size() <= 1);
 
-    List<String> mapTags =
-        pgmMap.getTags().stream()
-            .filter(MapTag::isGamemode)
-            .map(mapTag -> PlainTextComponentSerializer.plainText().serialize(mapTag.getAcronym()))
-            .collect(Collectors.toList());
-
-    if (mapTags.stream().anyMatch(MapData.conquestGamemodes::contains)) mapTags.add("CONQ");
-
-    map.setMapTags(mapTags);
+    map.setMapTags(new ArrayList<>(getMapTagsFromMap(pgmMap)));
     return map;
   }
 }

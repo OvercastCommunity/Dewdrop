@@ -74,8 +74,8 @@
 
         <!-- PGM -->
         <dependency>
-            <groupId>com.github.Pugzy</groupId>
-            <artifactId>PGM</artifactId>
+            <groupId>com.github.pugzy.pgm</groupId>
+            <artifactId>core</artifactId>
             <version>team-stats-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
