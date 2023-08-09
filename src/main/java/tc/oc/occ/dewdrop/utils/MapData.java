@@ -1,49 +1,52 @@
 package tc.oc.occ.dewdrop.utils;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import tc.oc.occ.cobweb.definitions.UpsertPGMMapDTO;
 import tc.oc.pgm.api.map.Gamemode;
 import tc.oc.pgm.api.map.MapInfo;
 
 public class MapData {
-  private static List<String> conquestGamemodes =
-      Stream.of("CTF", "KOTF", "KOTH", "CP", "TDM").collect(Collectors.toList());
+  private static final Set<Gamemode> CONQUEST_GAMEMODES =
+      EnumSet.of(
+          Gamemode.CAPTURE_THE_FLAG,
+          Gamemode.KING_OF_THE_FLAG,
+          Gamemode.KING_OF_THE_HILL,
+          Gamemode.CONTROL_THE_POINT,
+          Gamemode.DEATHMATCH);
 
   /** Translates PGM gamemodes into Cobweb map tags */
   public static Set<String> getMapTagsFromMap(MapInfo map) {
     Set<String> mapTags = new HashSet<String>();
 
     for (Gamemode gamemode : map.getGamemodes()) {
-      switch (gamemode.getId()) {
-        case "arcade":
+      switch (gamemode) {
+        case ARCADE:
           mapTags.add("FUN");
           break;
-        case "bedwars":
+        case BEDWARS:
           mapTags.add("BW");
           break;
-        case "br":
+        case BLITZ_RAGE:
           mapTags.add("BLITZ");
           mapTags.add("RAGE");
           break;
-        case "ffb":
+        case FLAG_FOOTBALL:
           mapTags.add("FF");
           break;
-        case "blitz":
-        case "bridge":
-        case "cp":
-        case "ctf":
-        case "ctw":
-        case "dtc":
-        case "dtm":
-        case "koth":
-        case "kotf":
-        case "rage":
-        case "tdm":
+        case BLITZ:
+        case BRIDGE:
+        case CONTROL_THE_POINT:
+        case CAPTURE_THE_FLAG:
+        case CAPTURE_THE_WOOL:
+        case DESTROY_THE_CORE:
+        case DESTROY_THE_MONUMENT:
+        case KING_OF_THE_HILL:
+        case KING_OF_THE_FLAG:
+        case RAGE:
+        case DEATHMATCH:
           mapTags.add(gamemode.getId().toUpperCase());
           break;
 
@@ -52,7 +55,7 @@ public class MapData {
       }
     }
 
-    if (mapTags.stream().anyMatch(MapData.conquestGamemodes::contains)) mapTags.add("CONQ");
+    if (map.getGamemodes().stream().anyMatch(CONQUEST_GAMEMODES::contains)) mapTags.add("CONQ");
     return mapTags;
   }
 
