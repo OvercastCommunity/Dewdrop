@@ -13,7 +13,6 @@ import tc.oc.occ.cobweb.definitions.CreateWinnerTeamDTO;
 import tc.oc.occ.dewdrop.config.AppData;
 import tc.oc.pgm.api.match.Match;
 import tc.oc.pgm.api.party.Competitor;
-import tc.oc.pgm.api.player.MatchPlayer;
 import tc.oc.pgm.ffa.FreeForAllMatchModule;
 import tc.oc.pgm.score.ScoreMatchModule;
 import tc.oc.pgm.stats.PlayerStats;
@@ -44,8 +43,9 @@ public class MatchData {
               .collect(Collectors.toList()));
 
       if (winner.isPresent()) {
-        MatchPlayer player = winner.get().getPlayers().stream().findFirst().get();
-        match.setWinnerUserUuid(player.getBukkit().getUniqueId());
+        winner.get().getPlayers().stream()
+            .findFirst()
+            .ifPresent(player -> match.setWinnerUserUuid(player.getId()));
       }
     } else {
       match.setTeams(
