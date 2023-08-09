@@ -1,5 +1,6 @@
 package tc.oc.occ.dewdrop.utils;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
@@ -100,10 +101,10 @@ public class MatchData {
     stats.setKills(playerStats.getKills());
     stats.setDeaths(playerStats.getDeaths());
     stats.setKillstreak(playerStats.getMaxKillstreak());
-    stats.setDamageDealt((int) playerStats.getDamageDone());
-    stats.setDamageDealtBow((int) playerStats.getBowDamage());
-    stats.setDamageReceived((int) playerStats.getDamageTaken());
-    stats.setDamageReceivedBow((int) playerStats.getBowDamageTaken());
+    stats.setDamageDealt(BigDecimal.valueOf(playerStats.getDamageDone()));
+    stats.setDamageDealtBow(BigDecimal.valueOf(playerStats.getBowDamage()));
+    stats.setDamageReceived(BigDecimal.valueOf(playerStats.getDamageTaken()));
+    stats.setDamageReceivedBow(BigDecimal.valueOf(playerStats.getBowDamageTaken()));
     stats.setArrowsHit(playerStats.getShotsHit());
     stats.setArrowsShot(playerStats.getShotsTaken());
 
