@@ -23,7 +23,7 @@ import tc.oc.pgm.teams.Team;
 public class MatchData {
   public static CreateMatchDTO populateNewMatch(Match pgmMatch) {
     ScoreMatchModule scoreModule = pgmMatch.getModule(ScoreMatchModule.class);
-    StatsMatchModule statsModule = pgmMatch.getModule(StatsMatchModule.class);
+    StatsMatchModule statsModule = pgmMatch.moduleRequire(StatsMatchModule.class);
 
     CreateMatchDTO match = new CreateMatchDTO();
 
@@ -41,6 +41,7 @@ public class MatchData {
       match.setParticipations(
           statsModule.getStats().entrySet().stream()
               .map(pair -> populateNewParticipation(pair, scoreModule))
+              .peek(participation -> participation.setPrimary(true))
               .collect(Collectors.toList()));
 
       if (winner.isPresent()) {
@@ -63,6 +64,12 @@ public class MatchData {
                         statsModule.getParticipationStats().row((Team) competitor).entrySet()
                             .stream()
                             .map(pair -> populateNewParticipation(pair, scoreModule))
+                            .peek(
+                                participation ->
+                                    participation.setPrimary(
+                                        statsModule.getPrimaryTeam(
+                                                participation.getUserUuid(), false)
+                                            == (Team) competitor))
                             .collect(Collectors.toList()));
 
                     return team;
@@ -96,6 +103,8 @@ public class MatchData {
     participation.setUserUuid(userUuid);
 
     if (playerStats == null) return participation;
+
+    participation.setDuration(playerStats.getTimePlayed().toMillis());
 
     CreateStatsDTO stats = new CreateStatsDTO();
     stats.setKills(playerStats.getKills());
