@@ -1,5 +1,6 @@
 package tc.oc.occ.dewdrop.api;
 
+import java.util.UUID;
 import java.util.logging.Logger;
 import tc.oc.occ.cobweb.ApiClient;
 import tc.oc.occ.cobweb.ApiException;
@@ -11,6 +12,7 @@ import tc.oc.occ.cobweb.definitions.BasicUserDTO;
 import tc.oc.occ.cobweb.definitions.CreateMatchDTO;
 import tc.oc.occ.cobweb.definitions.MatchDTO;
 import tc.oc.occ.cobweb.definitions.PGMMapDTO;
+import tc.oc.occ.cobweb.definitions.ProfileStatsDTO;
 import tc.oc.occ.cobweb.definitions.UpsertPGMMapDTO;
 import tc.oc.occ.cobweb.definitions.UserDTO;
 import tc.oc.occ.dewdrop.config.AppData;
@@ -47,6 +49,14 @@ public class APIManager {
   public MatchDTO getMatch(String matchId) {
     try {
       return matchesApi.matchesControllerGetMatch(matchId);
+    } catch (ApiException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public ProfileStatsDTO getProfileStats(UUID userUuid) {
+    try {
+      return usersApi.usersControllerGetStats(userUuid.toString(), null, null, null);
     } catch (ApiException e) {
       throw new RuntimeException(e);
     }
