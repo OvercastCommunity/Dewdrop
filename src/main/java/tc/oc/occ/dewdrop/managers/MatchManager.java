@@ -26,9 +26,8 @@ public class MatchManager extends DewdropManager implements Listener {
   @EventHandler(priority = EventPriority.MONITOR)
   public void onMatchFinish(MatchFinishEvent event) {
     CreateMatchDTO request = MatchData.populateNewMatch(event.getMatch());
-    if (request == null) return;
 
-    Dewdrop.newSharedChain("main")
+    Dewdrop.newSharedChain(event.getMatch().getId())
         .asyncFirst(() -> apiManager.createMatch(request))
         .abortIf(response -> response == null || AppData.Web.getMatch() == null)
         .delay(130)

@@ -90,11 +90,30 @@ public class APIManager {
   }
 
   public PGMMapDTO upsertMap(UpsertPGMMapDTO map) {
-    try {
-      return mapsApi.mapsControllerUpsertMap(map.getSlug(), map);
-    } catch (ApiException e) {
-      throw new RuntimeException(e);
+    int retries = 40;
+
+    for (int i = 0; i < retries; ) {
+      try {
+        return mapsApi.mapsControllerUpsertMap(map.getSlug(), map);
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
+
+      i += 1;
+      System.out.println(
+          "[Dewdrop] Failed to upsert map, retrying in "
+              + (i * 5)
+              + "s ("
+              + i
+              + "/"
+              + retries
+              + ")");
+      try {
+        Thread.sleep(i * 5000L);
+      } catch (InterruptedException ignore) {
+      }
     }
+    return null;
   }
 
   public UserDTO upsertUser(BasicUserDTO user) {
