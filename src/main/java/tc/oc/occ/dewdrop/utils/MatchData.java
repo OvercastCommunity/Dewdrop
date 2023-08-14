@@ -58,7 +58,8 @@ public class MatchData {
 
                     team.setName(competitor.getNameLegacy());
                     team.setColor("#" + Integer.toHexString(competitor.getFullColor().asRGB()));
-                    team.setScore(scoreModule != null ? (int) scoreModule.getScore(competitor) : 0);
+                    team.setScore(
+                        scoreModule != null ? (int) scoreModule.getScore(competitor) : null);
 
                     team.setParticipations(
                         statsModule.getParticipationStats().row((Team) competitor).entrySet()
