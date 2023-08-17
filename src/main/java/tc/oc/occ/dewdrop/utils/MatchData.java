@@ -57,7 +57,8 @@ public class MatchData {
                     CreateTeamDTO team = new CreateTeamDTO();
 
                     team.setName(competitor.getNameLegacy());
-                    team.setColor("#" + Integer.toHexString(competitor.getFullColor().asRGB()));
+                    team.setColor(
+                        "#" + String.format("%06X", 0xFFFFFF & competitor.getFullColor().asRGB()));
                     team.setScore(
                         scoreModule != null ? (int) scoreModule.getScore(competitor) : null);
 
