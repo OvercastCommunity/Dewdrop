@@ -74,9 +74,9 @@
 
         <!-- PGM -->
         <dependency>
-            <groupId>com.github.pugzy.pgm</groupId>
+            <groupId>tc.oc.pgm</groupId>
             <artifactId>core</artifactId>
-            <version>team-stats-SNAPSHOT</version>
+            <version>0.16-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
