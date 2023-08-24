@@ -1,18 +1,31 @@
 package tc.oc.occ.dewdrop;
 
 import co.aikar.commands.BukkitCommandManager;
+import co.aikar.taskchain.BukkitTaskChainFactory;
+import co.aikar.taskchain.TaskChain;
+import co.aikar.taskchain.TaskChainFactory;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import tc.oc.occ.dewdrop.cobweb.CobwebAPI;
-import tc.oc.occ.dewdrop.commands.TestCommand;
-import tc.oc.occ.dewdrop.matches.DewdropMatchManager;
+import tc.oc.occ.dewdrop.api.APIManager;
+import tc.oc.occ.dewdrop.commands.StatsCommand;
+import tc.oc.occ.dewdrop.managers.MapManager;
+import tc.oc.occ.dewdrop.managers.MatchManager;
+import tc.oc.occ.dewdrop.managers.PlayerManager;
 
 public class Dewdrop extends JavaPlugin {
 
   private static Dewdrop PLUGIN;
+  private static TaskChainFactory taskChainFactory;
 
-  private CobwebAPI cobweb;
-  private DewdropConfig config;
-  private DewdropMatchManager matchManager;
+  private APIManager apiManager;
+
+  private MapManager mapManager;
+  private MatchManager matchManager;
+  private PlayerManager playerManager;
+
+  private BukkitAudiences adventure;
   private BukkitCommandManager commands;
 
   @Override
@@ -22,13 +35,19 @@ public class Dewdrop extends JavaPlugin {
     this.saveDefaultConfig();
     this.reloadConfig();
 
-    this.config = new DewdropConfig(getConfig());
-    this.cobweb = new CobwebAPI(config, getLogger());
-    this.matchManager = new DewdropMatchManager(this, cobweb);
+    this.apiManager = new APIManager(getLogger());
+
+    this.mapManager = new MapManager(this, apiManager);
+    this.matchManager = new MatchManager(this, apiManager);
+    this.playerManager = new PlayerManager(this, apiManager);
+
+    this.adventure = BukkitAudiences.create(this);
 
     this.commands = new BukkitCommandManager(this);
-    commands.registerDependency(DewdropMatchManager.class, matchManager);
-    commands.registerCommand(new TestCommand());
+    commands.registerDependency(APIManager.class, apiManager);
+    commands.registerCommand(new StatsCommand());
+
+    taskChainFactory = BukkitTaskChainFactory.create(this);
   }
 
   @Override
@@ -36,5 +55,17 @@ public class Dewdrop extends JavaPlugin {
 
   public static Dewdrop get() {
     return PLUGIN;
+  }
+
+  public static <T> TaskChain<T> newChain() {
+    return taskChainFactory.newChain();
+  }
+
+  public static <T> TaskChain<T> newSharedChain(String name) {
+    return taskChainFactory.newSharedChain(name);
+  }
+
+  public Audience audienceOf(Player sender) {
+    return adventure.player(sender);
   }
 }

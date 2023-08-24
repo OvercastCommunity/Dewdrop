@@ -1,14 +1,17 @@
-# Cobweb API Settings
+# Cobweb API settings
 api:
   url: "http://localhost:4000" # Address where API is hosted
-  auth: "" # Authorization 
+  key: "" # Authorization
 
 # Name of the server (empty to use system env var)
-server-name: "" 
+server-name: ""
 
-# Series Settings
-series:
-  id: 1
-  name: "Casual"
-  service: "CASUAL"
+# Series id assigned to matches
+series-id: 1
+
+# Spider website page links (remove section to remove references)
+web:
+  match: "https://localhost:3000/matches/{matchId}"
+  profile: "https://localhost:3000/{name}"
+
   
