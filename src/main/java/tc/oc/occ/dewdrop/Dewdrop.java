@@ -45,7 +45,7 @@ public class Dewdrop extends JavaPlugin {
 
     this.commands = new BukkitCommandManager(this);
     commands.registerDependency(APIManager.class, apiManager);
-    commands.registerCommand(new StatsCommand());
+    commands.registerCommand(new StatsCommand(this, apiManager));
 
     taskChainFactory = BukkitTaskChainFactory.create(this);
   }
