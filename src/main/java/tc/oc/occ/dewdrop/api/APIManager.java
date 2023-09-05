@@ -94,7 +94,7 @@ public class APIManager {
 
     for (int i = 0; i < retries; ) {
       try {
-        return mapsApi.mapsControllerUpsertMap(map.getSlug(), map);
+        return mapsApi.mapsControllerUpsertMap(map.getMapSlug(), map);
       } catch (Exception ex) {
         ex.printStackTrace();
       }

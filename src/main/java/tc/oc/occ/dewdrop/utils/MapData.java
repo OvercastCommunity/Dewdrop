@@ -63,7 +63,7 @@ public class MapData {
     UpsertPGMMapDTO map = new UpsertPGMMapDTO();
 
     map.setName(pgmMap.getName());
-    map.setSlug(pgmMap.getId());
+    map.setMapSlug(pgmMap.getId());
     map.setTeamCount(pgmMap.getMaxPlayers().size());
     map.setPlayerCount(pgmMap.getMaxPlayers().stream().reduce(0, Integer::sum));
     map.setUniform(
