@@ -8,6 +8,7 @@ import tc.oc.occ.cobweb.Configuration;
 import tc.oc.occ.cobweb.api.MapsApi;
 import tc.oc.occ.cobweb.api.MatchesApi;
 import tc.oc.occ.cobweb.api.UsersApi;
+import tc.oc.occ.cobweb.auth.ApiKeyAuth;
 import tc.oc.occ.cobweb.definitions.BasicUserDTO;
 import tc.oc.occ.cobweb.definitions.CreateMatchDTO;
 import tc.oc.occ.cobweb.definitions.MatchDTO;
@@ -37,7 +38,8 @@ public class APIManager {
 
   private void loadClient(String apiURL, String apiKey) {
     this.client = Configuration.getDefaultApiClient();
-    this.client.setBasePath(apiURL).setBearerToken(apiKey);
+    this.client.setBasePath(apiURL);
+    ((ApiKeyAuth) this.client.getAuthentication("apiKeyAuth")).setApiKey(apiKey);
 
     logger.info("Created new Cobweb client instance...");
   }
