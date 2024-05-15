@@ -11,6 +11,7 @@ import tc.oc.occ.dewdrop.Dewdrop;
 import tc.oc.occ.dewdrop.DewdropManager;
 import tc.oc.occ.dewdrop.api.APIManager;
 import tc.oc.occ.dewdrop.config.AppData;
+import tc.oc.occ.dewdrop.events.MatchLinkShareEvent;
 import tc.oc.occ.dewdrop.utils.MatchData;
 import tc.oc.occ.dewdrop.utils.Messages;
 import tc.oc.pgm.api.match.event.MatchFinishEvent;
@@ -36,6 +37,8 @@ public class MatchManager extends DewdropManager implements Listener {
               Bukkit.getServer()
                   .getPluginManager()
                   .callEvent(new MatchStatsEvent(event.getMatch(), true, true));
+
+              Bukkit.getServer().getPluginManager().callEvent(new MatchLinkShareEvent(response));
 
               event.getMatch().sendMessage(Messages.matchLink(response));
               event.getMatch().sendMessage(empty());
