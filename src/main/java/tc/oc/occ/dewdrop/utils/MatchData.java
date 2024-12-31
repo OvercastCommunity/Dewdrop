@@ -111,6 +111,7 @@ public class MatchData {
     CreateStatsDTO stats = new CreateStatsDTO();
     stats.setKills(playerStats.getKills());
     stats.setDeaths(playerStats.getDeaths());
+    stats.setAssists(playerStats.getAssists());
     stats.setKillstreak(playerStats.getMaxKillstreak());
     stats.setDamageDealt(BigDecimal.valueOf(playerStats.getDamageDone()));
     stats.setDamageDealtBow(BigDecimal.valueOf(playerStats.getBowDamage()));
