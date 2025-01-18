@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import tc.oc.occ.cobweb.definitions.ProfileStatsDTO;
 import tc.oc.occ.dewdrop.Dewdrop;
 import tc.oc.occ.dewdrop.api.APIManager;
 import tc.oc.occ.dewdrop.utils.Messages;
@@ -44,7 +43,6 @@ public class StatsCommand extends BaseCommand implements Listener {
   public void sendStats(Player sender) {
     Audience viewer = Dewdrop.get().audienceOf(sender);
 
-    ProfileStatsDTO stats = apiManager.getProfileStats(sender.getUniqueId());
     Dewdrop.newSharedChain("stats")
         .asyncFirst(() -> apiManager.getProfileStats(sender.getUniqueId()))
         .syncLast(
