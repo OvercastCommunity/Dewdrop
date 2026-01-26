@@ -54,7 +54,6 @@ public class StatsCommand extends BaseCommand implements Listener {
                         NamedTextColor.RED));
                 return;
               }
-              ;
 
               Messages.stats(profileStats).forEach(viewer::sendMessage);
             })

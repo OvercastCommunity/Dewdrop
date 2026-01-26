@@ -5,7 +5,7 @@ import tc.oc.occ.dewdrop.config.AppData;
 
 public class MatchLinkShareEvent extends DewdropEvent {
 
-  private String matchLink;
+  private final String matchLink;
 
   public MatchLinkShareEvent(MatchDTO match) {
     this.matchLink = AppData.Web.getMatch().replace("{matchId}", match.getMatchId());
