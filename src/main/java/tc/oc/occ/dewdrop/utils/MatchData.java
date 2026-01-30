@@ -63,7 +63,10 @@ public class MatchData {
                         scoreModule != null ? (int) scoreModule.getScore(competitor) : null);
 
                     team.setParticipations(
-                        statsModule.getParticipationStats().row((Team) competitor).entrySet()
+                        statsModule
+                            .getParticipationStats()
+                            .row((Team) competitor)
+                            .entrySet()
                             .stream()
                             .map(pair -> populateNewParticipation(pair, scoreModule))
                             .peek(
