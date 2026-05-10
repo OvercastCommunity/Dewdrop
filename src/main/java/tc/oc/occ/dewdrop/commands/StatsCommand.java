@@ -6,7 +6,6 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Subcommand;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,6 +14,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import tc.oc.occ.dewdrop.Dewdrop;
 import tc.oc.occ.dewdrop.api.APIManager;
 import tc.oc.occ.dewdrop.utils.Messages;
+import tc.oc.pgm.util.Audience;
 
 public class StatsCommand extends BaseCommand implements Listener {
 
@@ -41,7 +41,7 @@ public class StatsCommand extends BaseCommand implements Listener {
   }
 
   public void sendStats(Player sender) {
-    Audience viewer = Dewdrop.get().audienceOf(sender);
+    var viewer = Audience.get(sender);
 
     Dewdrop.newSharedChain("stats")
         .asyncFirst(() -> apiManager.getProfileStats(sender.getUniqueId()))

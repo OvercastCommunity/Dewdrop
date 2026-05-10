@@ -4,9 +4,6 @@ import co.aikar.commands.BukkitCommandManager;
 import co.aikar.taskchain.BukkitTaskChainFactory;
 import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainFactory;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import tc.oc.occ.dewdrop.api.APIManager;
 import tc.oc.occ.dewdrop.commands.StatsCommand;
@@ -25,7 +22,6 @@ public class Dewdrop extends JavaPlugin {
   private MatchManager matchManager;
   private PlayerManager playerManager;
 
-  private BukkitAudiences adventure;
   private BukkitCommandManager commands;
 
   @Override
@@ -40,8 +36,6 @@ public class Dewdrop extends JavaPlugin {
     this.mapManager = new MapManager(this, apiManager);
     this.matchManager = new MatchManager(this, apiManager);
     this.playerManager = new PlayerManager(this, apiManager);
-
-    this.adventure = BukkitAudiences.create(this);
 
     this.commands = new BukkitCommandManager(this);
     commands.registerDependency(APIManager.class, apiManager);
@@ -63,9 +57,5 @@ public class Dewdrop extends JavaPlugin {
 
   public static <T> TaskChain<T> newSharedChain(String name) {
     return taskChainFactory.newSharedChain(name);
-  }
-
-  public Audience audienceOf(Player sender) {
-    return adventure.player(sender);
   }
 }
