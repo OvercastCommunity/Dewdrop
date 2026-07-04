@@ -44,11 +44,9 @@ public class MatchData {
               .peek(participation -> participation.setPrimary(true))
               .collect(Collectors.toList()));
 
-      if (winner.isPresent()) {
-        winner.get().getPlayers().stream()
-            .findFirst()
-            .ifPresent(player -> match.setWinnerUserUuid(player.getId()));
-      }
+      winner
+          .flatMap(competitor -> competitor.getPlayers().stream().findFirst())
+          .ifPresent(player -> match.setWinnerUserUuid(player.getId()));
     } else {
       match.setTeams(
           pgmMatch.getCompetitors().stream()
@@ -74,7 +72,7 @@ public class MatchData {
                                     participation.setPrimary(
                                         statsModule.getPrimaryTeam(
                                                 participation.getUserUuid(), false)
-                                            == (Team) competitor))
+                                            == competitor))
                             .collect(Collectors.toList()));
 
                     return team;

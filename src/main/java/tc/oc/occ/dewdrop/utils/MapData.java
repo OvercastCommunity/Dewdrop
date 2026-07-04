@@ -19,7 +19,7 @@ public class MapData {
 
   /** Translates PGM gamemodes into Cobweb map tags */
   public static Set<String> getMapTagsFromMap(MapInfo map) {
-    Set<String> mapTags = new HashSet<String>();
+    Set<String> mapTags = new HashSet<>();
 
     for (Gamemode gamemode : map.getGamemodes()) {
       switch (gamemode) {
@@ -66,8 +66,7 @@ public class MapData {
     map.setMapSlug(pgmMap.getId());
     map.setTeamCount(pgmMap.getMaxPlayers().size());
     map.setPlayerCount(pgmMap.getMaxPlayers().stream().reduce(0, Integer::sum));
-    map.setUniform(
-        new HashSet<Integer>(new ArrayList<Integer>(pgmMap.getMaxPlayers())).size() <= 1);
+    map.setUniform(new HashSet<>(new ArrayList<>(pgmMap.getMaxPlayers())).size() <= 1);
 
     map.setMapTags(new ArrayList<>(getMapTagsFromMap(pgmMap)));
     return map;
