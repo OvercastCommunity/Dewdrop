@@ -1,6 +1,6 @@
 package tc.oc.occ.dewdrop;
 
-import co.aikar.commands.BukkitCommandManager;
+import co.aikar.commands.PaperCommandManager;
 import co.aikar.taskchain.BukkitTaskChainFactory;
 import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainFactory;
@@ -22,7 +22,7 @@ public class Dewdrop extends JavaPlugin {
   private MatchManager matchManager;
   private PlayerManager playerManager;
 
-  private BukkitCommandManager commands;
+  private PaperCommandManager commands;
 
   @Override
   public void onEnable() {
@@ -37,7 +37,7 @@ public class Dewdrop extends JavaPlugin {
     this.matchManager = new MatchManager(this, apiManager);
     this.playerManager = new PlayerManager(this, apiManager);
 
-    this.commands = new BukkitCommandManager(this);
+    this.commands = new PaperCommandManager(this);
     commands.registerDependency(APIManager.class, apiManager);
     commands.registerCommand(new StatsCommand(this, apiManager));
 
